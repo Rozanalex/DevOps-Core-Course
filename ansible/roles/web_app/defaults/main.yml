@@ -1,0 +1,20 @@
+---
+web_app_name: devops-info-service
+web_app_container_name: devops-info-python
+web_app_image: "akakii98/devops-info-python:latest"
+
+web_app_host: "0.0.0.0"
+web_app_port: 5000
+web_app_published_port: 5000
+
+web_app_restart_policy: unless-stopped
+web_app_env_file_path: /opt/devops-info/.env
+web_app_workdir: /opt/devops-info
+web_app_compose_project_dir: "/opt/{{ web_app_name }}"
+
+# Health check
+web_app_healthcheck_url: "http://127.0.0.1:{{ app_published_port }}/health"
+web_app_healthcheck_retries: 15
+web_app_healthcheck_delay: 2
+
+web_app_wipe: false
