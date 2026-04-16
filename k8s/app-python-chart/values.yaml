@@ -1,0 +1,66 @@
+replicaCount: 3
+
+nameOverride: "app-python"
+fullnameOverride: "app-python"
+
+image:
+  repository: akakii98/devops-info-python
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 5000
+  nodePort: 30080
+
+containerPort: 5000
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+readinessProbe:
+  path: /health
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 2
+  failureThreshold: 3
+
+livenessProbe:
+  path: /health
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 2
+  failureThreshold: 3
+
+env:
+  - name: PORT
+    value: "5000"
+
+secret:
+  create: true
+  name: ""
+  data:
+    username: "CHANGE_ME"
+    password: "CHANGE_ME"
+
+serviceAccount:
+  create: true
+  name: "app-python-vault-sa"
+
+vault:
+  enabled: false
+  role: "lab11-app"
+  secretPath: "lab11/data/myapp/config"
+  injectFileName: "config"
+
+persistence:
+  enabled: true
+  size: 100Mi
+  storageClass: ""
+  mountPath: /data
